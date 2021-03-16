@@ -141,9 +141,9 @@ type Node struct {
 
 // Variable is an IDENT that is substituted during parsing
 type Variable struct {
-	n string // name
-	t string // type
-	v string // value
+	N string // name
+	T string // type
+	V string // value
 }
 
 // parse a string into an AST
@@ -223,17 +223,17 @@ paren: // label used to escape for loop
 				}
 			} else { // it's a Variable
 				for _, v := range vars {
-					if value == v.n {
-						node := Node{v.t, make([]interface{}, 0)}
-						if v.t == "NUMBER" {
-							f, fErr := reformatFloat(v.v)
+					if value == v.N {
+						node := Node{v.T, make([]interface{}, 0)}
+						if v.T == "NUMBER" {
+							f, fErr := reformatFloat(v.V)
 							if fErr != nil {
 								err = fErr
 								return
 							}
 							node.Args = append(node.Args, f)
 						} else {
-							node.Args = append(node.Args, v.v)
+							node.Args = append(node.Args, v.V)
 						}
 						buffer = append(buffer, node)
 						pos++
@@ -257,8 +257,8 @@ paren: // label used to escape for loop
 		case "STRING":
 			// Replace any params/vars with their value
 			for _, v := range vars {
-				if strings.HasPrefix(v.n, "$") {
-					value = strings.ReplaceAll(value, v.n, v.v)
+				if strings.HasPrefix(v.N, "$") {
+					value = strings.ReplaceAll(value, v.N, v.V)
 				}
 			}
 			node := Node{tokenType, make([]interface{}, 0)}
